@@ -99,7 +99,7 @@
                 android:textColor="@color/primary"
                 android:layout_marginTop="16dp" />
 
-            <EditText
+            <com.example.dicodingstoryappselangkahmenujukebebasan.ui.customview.Password
                 android:id="@+id/passwordInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

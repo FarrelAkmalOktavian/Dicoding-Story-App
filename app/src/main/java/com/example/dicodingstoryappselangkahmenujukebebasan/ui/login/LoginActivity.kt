@@ -52,6 +52,11 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.emailInput.text.toString()
             val password = binding.passwordInput.text.toString()
 
+            if (password.length < 8) {
+                binding.passwordInput.error = "Password tidak boleh kurang dari 8 karakter"
+                return@setOnClickListener
+            }
+
             loginViewModel.login(email, password)
 
             loginViewModel.loginResult.observe(this) { result ->
@@ -82,7 +87,6 @@ class LoginActivity : AppCompatActivity() {
                     is Result.Error -> {
                         Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
                     }
-
                     else -> {
                         Toast.makeText(this, getString(R.string.login_error_message), Toast.LENGTH_SHORT).show()
                     }

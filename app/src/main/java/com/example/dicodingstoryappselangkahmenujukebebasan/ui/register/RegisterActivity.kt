@@ -78,6 +78,13 @@ class RegisterActivity : AppCompatActivity() {
             val password = binding.passwordInput.text.toString()
 
             if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
+                val passwordValid = (binding.passwordInput.text?.length ?: 0) >= 8
+
+                if (!passwordValid) {
+                    Toast.makeText(this, "Password tidak boleh kurang dari 8 karakter", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
                 registerViewModel.register(name, email, password)
             } else {
                 Toast.makeText(this, "Tolong lengkapi data kamu", Toast.LENGTH_SHORT).show()
