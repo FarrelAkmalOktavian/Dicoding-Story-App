@@ -1,8 +1,11 @@
 package com.example.dicodingstoryappselangkahmenujukebebasan.ui.onboard
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -28,6 +31,7 @@ class OnboardActivity : AppCompatActivity() {
 
         setupView()
         setupAction()
+        playAnimation()
     }
 
     private fun setupView() {
@@ -57,6 +61,29 @@ class OnboardActivity : AppCompatActivity() {
 
         binding.signupButton.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
+        }
+    }
+
+    private fun playAnimation() {
+        ObjectAnimator.ofFloat(binding.mainImage, View.TRANSLATION_X, -30f, 30f).apply {
+            duration = 6000
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }.start()
+
+        binding.bottomCard.alpha = 0f
+
+        val cardView = ObjectAnimator.ofFloat(binding.bottomCard, View.TRANSLATION_Y, 1000f, 0f).setDuration(500)
+        val cardViewAlpha = ObjectAnimator.ofFloat(binding.bottomCard, View.ALPHA, 0f, 1f).setDuration(500)
+
+        AnimatorSet().apply {
+            playSequentially(
+                AnimatorSet().apply {
+                    playTogether(cardView, cardViewAlpha)
+                }
+            )
+            startDelay = 500
+            start()
         }
     }
 }

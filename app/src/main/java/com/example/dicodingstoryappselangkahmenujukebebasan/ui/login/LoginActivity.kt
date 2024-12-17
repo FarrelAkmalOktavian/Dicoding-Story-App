@@ -1,5 +1,7 @@
 package com.example.dicodingstoryappselangkahmenujukebebasan.ui.login
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -32,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
 
         setupView()
         setupAction()
+        playAnimation()
     }
 
     private fun setupView() {
@@ -94,5 +97,75 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun playAnimation() {
+        binding.cardViewLogin.alpha = 0f
+        binding.loginText1.alpha = 0f
+        binding.loginText2.alpha = 0f
+        binding.emailLabel.alpha = 0f
+        binding.emailInput.alpha = 0f
+        binding.passwordLabel.alpha = 0f
+        binding.passwordInput.alpha = 0f
+        binding.loginButton.alpha = 0f
+
+        val cardView = ObjectAnimator.ofFloat(binding.cardViewLogin, View.TRANSLATION_X, -1000f, 0f).setDuration(500)
+        val cardViewAlpha = ObjectAnimator.ofFloat(binding.cardViewLogin, View.ALPHA, 0f, 1f).setDuration(500)
+
+        val message =
+            ObjectAnimator.ofFloat(binding.loginText1, View.TRANSLATION_X, -1000f, 0f).setDuration(500)
+        val messageAlpha = ObjectAnimator.ofFloat(binding.loginText1, View.ALPHA, 0f, 1f).setDuration(500)
+
+        val message2 =
+            ObjectAnimator.ofFloat(binding.loginText2, View.TRANSLATION_X, -1000f, 0f).setDuration(250)
+        val message2Alpha = ObjectAnimator.ofFloat(binding.loginText2, View.ALPHA, 0f, 1f).setDuration(250)
+
+        val emailTextView =
+            ObjectAnimator.ofFloat(binding.emailLabel, View.TRANSLATION_X, -1000f, 0f).setDuration(250)
+        val emailAlpha = ObjectAnimator.ofFloat(binding.emailLabel, View.ALPHA, 0f, 1f).setDuration(250)
+
+        val emailTextInput =
+            ObjectAnimator.ofFloat(binding.emailInput, View.TRANSLATION_X, -1000f, 0f).setDuration(250)
+        val emailInputAlpha = ObjectAnimator.ofFloat(binding.emailInput, View.ALPHA, 0f, 1f).setDuration(250)
+
+        val passwordTextView =
+            ObjectAnimator.ofFloat(binding.passwordLabel, View.TRANSLATION_X, -1000f, 0f).setDuration(250)
+        val passwordAlpha = ObjectAnimator.ofFloat(binding.passwordLabel, View.ALPHA, 0f, 1f).setDuration(250)
+
+        val passwordTextInput =
+            ObjectAnimator.ofFloat(binding.passwordInput, View.TRANSLATION_X, -1000f, 0f).setDuration(250)
+        val passwordInputAlpha = ObjectAnimator.ofFloat(binding.passwordInput, View.ALPHA, 0f, 1f).setDuration(250)
+
+        val login =
+            ObjectAnimator.ofFloat(binding.loginButton, View.TRANSLATION_X, -1000f, 0f).setDuration(250)
+        val loginAlpha = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 0f, 1f).setDuration(250)
+
+        AnimatorSet().apply {
+            playSequentially(
+                AnimatorSet().apply {
+                    playTogether(message, messageAlpha, message2, message2Alpha)
+                },
+                AnimatorSet().apply {
+                    playTogether(cardView, cardViewAlpha)
+                },
+                AnimatorSet().apply {
+                    playTogether(emailTextView, emailAlpha)
+                },
+                AnimatorSet().apply {
+                    playTogether(emailTextInput, emailInputAlpha)
+                },
+                AnimatorSet().apply {
+                    playTogether(passwordTextView, passwordAlpha)
+                },
+                AnimatorSet().apply {
+                    playTogether(passwordTextInput, passwordInputAlpha)
+                },
+                AnimatorSet().apply {
+                    playTogether(login, loginAlpha)
+                }
+            )
+            start()
+        }
+    }
+
 }
 
