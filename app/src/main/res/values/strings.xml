@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">DicodingStoryApp (selangkahmenujukebebasan)</string>
+    <string name="onboard_image">onboard image</string>
+    <string name="tittle_text">Dicoding Story App</string>
+    <string name="tittle_desc">Tempat nyaman untuk bercerita</string>
+    <string name="login_text">Masuk</string>
+    <string name="register_text">Daftar</string>
+    <string name="login_desc">Selamat datang kembali</string>
+    <string name="login_desc2">Silahkan masukkan data kamu dulu untuk masuk</string>
+    <string name="email_text">Email</string>
+    <string name="email_input">masukkan email</string>
+    <string name="password_text">Password</string>
+    <string name="password_input">masukkan password</string>
+    <string name="register_desc">Selamat datang di</string>
+    <string name="name_text">Nama</string>
+    <string name="name_input">masukkan nama</string>
+    <string name="register_desc2">Silahkan isi data kamu yaa...</string>
+    <string name="login_error_message">Mohon masukkan email dan password yang benar</string>
 </resources>
