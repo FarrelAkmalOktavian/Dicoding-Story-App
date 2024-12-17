@@ -52,6 +52,7 @@ class RegisterActivity : AppCompatActivity() {
                 }
 
                 else -> {
+                    showLoading(false)
                     Toast.makeText(
                         this,
                         getString(R.string.login_error_message),
@@ -98,9 +99,11 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
-            binding.loadingIndicator.visibility = android.view.View.VISIBLE
+            binding.loadingIndicator.visibility = View.VISIBLE
+            binding.signupButton.visibility = View.GONE
         } else {
-            binding.loadingIndicator.visibility = android.view.View.GONE
+            binding.loadingIndicator.visibility = View.GONE
+            binding.signupButton.visibility = View.VISIBLE
         }
     }
 

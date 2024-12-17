@@ -60,6 +60,8 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            showLoading(true)
+
             loginViewModel.login(email, password)
 
             loginViewModel.loginResult.observe(this) { result ->
@@ -73,6 +75,8 @@ class LoginActivity : AppCompatActivity() {
                         val user = UserModel(email, token, true)
 
                         loginViewModel.saveSession(user)
+
+                        showLoading(false)
 
                         AlertDialog.Builder(this).apply {
                             setTitle("Nice!")
@@ -88,13 +92,25 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
                     is Result.Error -> {
+                        showLoading(false)
                         Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
                     }
                     else -> {
+                        showLoading(false)
                         Toast.makeText(this, getString(R.string.login_error_message), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.loadingIndicator.visibility = View.VISIBLE
+            binding.loginButton.visibility = View.GONE
+        } else {
+            binding.loadingIndicator.visibility = View.GONE
+            binding.loginButton.visibility = View.VISIBLE
         }
     }
 
