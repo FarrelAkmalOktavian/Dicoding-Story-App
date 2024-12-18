@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.dicodingstoryappselangkahmenujukebebasan.data.Result
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.repository.UserRepository
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.RegisterResponse
 import kotlinx.coroutines.launch

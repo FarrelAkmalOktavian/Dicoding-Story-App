@@ -14,7 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.R
 import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.ActivityRegisterBinding
-import com.example.dicodingstoryappselangkahmenujukebebasan.data.Result
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
 import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.login.LoginActivity
 

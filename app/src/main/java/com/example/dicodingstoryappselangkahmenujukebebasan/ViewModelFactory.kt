@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.repository.UserRepository
 import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.login.LoginViewModel
+import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainViewModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.register.RegisterViewModel
 
 class ViewModelFactory(private val repository: UserRepository) : ViewModelProvider.NewInstanceFactory() {
@@ -19,7 +20,6 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
                 MainViewModel(repository) as T
             }
-
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(repository) as T
             }

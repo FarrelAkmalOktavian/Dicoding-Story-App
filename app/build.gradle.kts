@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -60,5 +61,7 @@ dependencies {
     implementation (libs.converter.gson)
     implementation (libs.logging.interceptor)
 
+    implementation (libs.glide)
+    kapt ("com.github.bumptech.glide:ksp:4.15.1")
 
 }

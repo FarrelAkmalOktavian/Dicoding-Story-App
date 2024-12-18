@@ -10,8 +10,8 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.dicodingstoryappselangkahmenujukebebasan.MainActivity
-import com.example.dicodingstoryappselangkahmenujukebebasan.MainViewModel
+import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainActivity
+import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainViewModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.ViewModelFactory
 import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.ActivityOnboardBinding
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.login.LoginActivity

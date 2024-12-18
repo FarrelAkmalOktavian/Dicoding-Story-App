@@ -4,16 +4,22 @@ import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserPreference
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.LoginResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.retrofit.ApiService
-import com.example.dicodingstoryappselangkahmenujukebebasan.data.Result
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.RegisterResponse
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryDetailResponse
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class UserRepository private constructor(
     private val apiService: ApiService,
     private val userPreference: UserPreference
 ) {
-     suspend fun login(email: String, password: String): Flow<Result<LoginResponse>> {
+    suspend fun login(email: String, password: String): Flow<Result<LoginResponse>> {
         return flow {
             emit(Result.Loading)
             try {
@@ -36,6 +42,7 @@ class UserRepository private constructor(
         }
     }
 
+
     suspend fun register(name: String, email: String, password: String): Flow<Result<RegisterResponse>> {
         return flow {
             emit(Result.Loading)
@@ -51,6 +58,37 @@ class UserRepository private constructor(
             }
         }
     }
+
+    suspend fun getStories(page: Int, size: Int): Flow<Result<StoryResponse>> {
+        return flow {
+            try {
+                val user = userPreference.fetchSession().firstOrNull()
+                val token = user?.token.orEmpty()
+
+                if (token.isEmpty()) {
+                    emit(Result.Error("Token tidak ditemukan, silakan login kembali"))
+                    return@flow
+                }
+
+                val response = apiService.getStories(page, size)
+                emit(Result.Success(response))
+            } catch (e: Exception) {
+                emit(Result.Error("Gagal mengambil cerita: ${e.message}"))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getStoryDetail(storyId: String): Flow<Result<StoryDetailResponse>> {
+        return flow {
+            try {
+                val response = apiService.getStoryDetail(storyId)
+                emit(Result.Success(response))
+            } catch (e: Exception) {
+                emit(Result.Error("Error fetching story detail: ${e.message}"))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
 
 
     suspend fun storeSession(user: UserModel) {
