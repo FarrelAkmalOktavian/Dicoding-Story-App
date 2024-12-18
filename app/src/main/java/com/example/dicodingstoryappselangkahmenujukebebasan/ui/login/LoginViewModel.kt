@@ -16,18 +16,14 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     val loginResult: LiveData<Result<LoginResponse>> = _loginResult
 
     fun login(email: String, password: String) {
-        // Menggunakan viewModelScope untuk menjalankan coroutine
         viewModelScope.launch {
-            // Mengumpulkan hasil login dari repository
             userRepository.login(email, password).collect { result ->
-                // Memperbarui LiveData dengan hasil login
                 _loginResult.value = result
             }
         }
     }
 
     fun saveSession(user: UserModel) {
-        // Menyimpan session setelah login berhasil
         viewModelScope.launch {
             userRepository.storeSession(user)
         }

@@ -14,14 +14,17 @@ import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainViewModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.ViewModelFactory
 import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.ActivityOnboardBinding
+import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.login.LoginActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.register.RegisterActivity
+import kotlinx.coroutines.runBlocking
 
 class OnboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOnboardBinding
 
     private val mainViewModel: MainViewModel by viewModels {
-        ViewModelFactory.getInstance(this)
+        val viewModelFactory = runBlocking { Injection.provideViewModelFactory(this@OnboardActivity) }
+        viewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

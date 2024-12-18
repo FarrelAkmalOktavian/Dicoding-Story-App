@@ -1,6 +1,7 @@
 package com.example.dicodingstoryappselangkahmenujukebebasan.data.pref
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -20,17 +21,22 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             preferences[TOKEN_KEY] = user.token
             preferences[IS_LOGIN_KEY] = true
         }
+        Log.d("UserPreference", "Token stored: ${user.token}")
     }
 
     fun fetchSession(): Flow<UserModel> {
         return dataStore.data.map { preferences ->
+            val token = preferences[TOKEN_KEY] ?: ""
+            val isLogin = preferences[IS_LOGIN_KEY] ?: false
+            Log.d("UserPreference", "Token fetched: $token")
             UserModel(
                 preferences[EMAIL_KEY] ?: "",
-                preferences[TOKEN_KEY] ?: "",
-                preferences[IS_LOGIN_KEY] ?: false
+                token,
+                isLogin
             )
         }
     }
+
 
     suspend fun logout() {
         dataStore.edit { preferences ->

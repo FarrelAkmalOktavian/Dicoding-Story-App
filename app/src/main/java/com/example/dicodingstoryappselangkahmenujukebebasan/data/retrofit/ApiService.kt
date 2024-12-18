@@ -1,15 +1,19 @@
 package com.example.dicodingstoryappselangkahmenujukebebasan.data.retrofit
 
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.AddStoryResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.LoginResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.RegisterResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryDetailResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryResponse
-import retrofit2.Response
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -31,7 +35,6 @@ interface ApiService {
 
     @GET("stories")
     suspend fun getStories(
-        //@Header("Authorization") token: String,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): StoryResponse
@@ -40,4 +43,11 @@ interface ApiService {
     suspend fun getStoryDetail(
         @Path("id") storyId: String
     ): StoryDetailResponse
+
+    @Multipart
+    @POST("stories")
+    suspend fun uploadStory(
+        @Part file: MultipartBody.Part,
+        @Part("description") description: RequestBody,
+    ): AddStoryResponse
 }

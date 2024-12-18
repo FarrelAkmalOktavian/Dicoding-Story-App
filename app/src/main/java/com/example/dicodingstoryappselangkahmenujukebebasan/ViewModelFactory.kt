@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.repository.UserRepository
 import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
+import com.example.dicodingstoryappselangkahmenujukebebasan.ui.addstory.AddStoryViewModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.login.LoginViewModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainViewModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.register.RegisterViewModel
@@ -23,6 +24,9 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(repository) as T
             }
+            modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
+                AddStoryViewModel(repository) as T
+            }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
     }
@@ -30,10 +34,12 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
     companion object {
         @Volatile
         private var INSTANCE: ViewModelFactory? = null
+
         @JvmStatic
-        fun getInstance(context: Context): ViewModelFactory {
+        suspend fun getInstance(context: Context): ViewModelFactory {
+            val repository = Injection.provideRepository(context)
             return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: ViewModelFactory(Injection.provideRepository(context)).also {
+                INSTANCE ?: ViewModelFactory(repository).also {
                     INSTANCE = it
                 }
             }

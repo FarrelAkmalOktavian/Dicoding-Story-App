@@ -2,6 +2,7 @@ package com.example.dicodingstoryappselangkahmenujukebebasan.data.repository
 
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserPreference
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.AddStoryResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.LoginResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.retrofit.ApiService
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
@@ -14,6 +15,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class UserRepository private constructor(
     private val apiService: ApiService,
@@ -89,6 +92,24 @@ class UserRepository private constructor(
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun uploadStory(
+        file: MultipartBody.Part,
+        descriptionPart: RequestBody
+    ): Flow<Result<AddStoryResponse>> {
+        return flow {
+            emit(Result.Loading)
+            try {
+                val response = apiService.uploadStory(file, descriptionPart)
+                if (response.error == false) {
+                    emit(Result.Success(response))
+                } else {
+                    emit(Result.Error(response.message ?: "Upload failed"))
+                }
+            } catch (e: Exception) {
+                emit(Result.Error("Gagal mengupload cerita: ${e.message}"))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
 
 
     suspend fun storeSession(user: UserModel) {

@@ -9,17 +9,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingstoryappselangkahmenujukebebasan.StoryAdapter
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
-import com.example.dicodingstoryappselangkahmenujukebebasan.ViewModelFactory
 import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.ActivityMainBinding
+import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
+import com.example.dicodingstoryappselangkahmenujukebebasan.ui.addstory.AddStoryActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.detail.DetailActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.login.LoginActivity
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels {
-        ViewModelFactory.getInstance(this)
+        val viewModelFactory = runBlocking { Injection.provideViewModelFactory(this@MainActivity) }
+        viewModelFactory
     }
     private val storyAdapter: StoryAdapter by lazy {
         StoryAdapter(emptyList()) { storyId ->
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupRecyclerView()
+        setupAddStory()
         setupLogout()
         observeSession()
     }
@@ -55,6 +59,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupAddStory() {
+        binding.addButton.setOnClickListener {
+            //mainViewModel.logout()
+            val intent = Intent(this, AddStoryActivity::class.java)
+            startActivity(intent)
+        }
+    }
 
     private fun setupLogout() {
         binding.logoutButton.setOnClickListener {
@@ -99,6 +110,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 Result.Loading -> {
                     showLoading(true)
+                }
+
+                else -> {
+                    println("Error fetching stories")
                 }
             }
         }

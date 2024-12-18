@@ -1,5 +1,8 @@
 [versions]
 agp = "8.6.0"
+camera2 = "1.1.0"
+cameraView = "1.4.1"
+compressor = "3.0.1"
 datastorePreferences = "1.1.1"
 glide = "4.16.0"
 kotlin = "1.9.0"
@@ -16,13 +19,18 @@ constraintlayout = "2.2.0"
 navigationFragmentKtx = "2.8.5"
 navigationUiKtx = "2.8.5"
 retrofitVersion = "2.9.0"
+mediationTestSuite = "3.0.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camera2" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraView" }
+androidx-camera2 = { module = "androidx.camera:camera2", version.ref = "camera2" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+compressor = { module = "id.zelory.compressor:compressor", version.ref = "compressor" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofitVersion" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -36,6 +44,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
+mediation-test-suite = { group = "com.google.android.ads", name = "mediation-test-suite", version.ref = "mediationTestSuite" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

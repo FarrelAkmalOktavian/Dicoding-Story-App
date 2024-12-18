@@ -18,13 +18,15 @@ import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
 import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.ActivityLoginBinding
 import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
+import kotlinx.coroutines.runBlocking
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
     private val loginViewModel: LoginViewModel by viewModels {
-        Injection.provideViewModelFactory(this)
+        val viewModelFactory = runBlocking { Injection.provideViewModelFactory(this@LoginActivity) }
+        viewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

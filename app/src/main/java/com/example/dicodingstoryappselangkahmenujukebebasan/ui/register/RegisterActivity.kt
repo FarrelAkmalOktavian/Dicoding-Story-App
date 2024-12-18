@@ -17,13 +17,15 @@ import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.Activity
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
 import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.login.LoginActivity
+import kotlinx.coroutines.runBlocking
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
 
     private val registerViewModel: RegisterViewModel by viewModels {
-        Injection.provideViewModelFactory(this)
+        val viewModelFactory = runBlocking { Injection.provideViewModelFactory(this@RegisterActivity) }
+        viewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

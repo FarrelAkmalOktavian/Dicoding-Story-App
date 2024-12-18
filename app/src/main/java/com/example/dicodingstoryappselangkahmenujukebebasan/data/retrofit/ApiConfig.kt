@@ -1,10 +1,10 @@
 package com.example.dicodingstoryappselangkahmenujukebebasan.data.retrofit
 
 import android.content.Context
+import android.util.Log
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserPreference
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.dataStore
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -12,9 +12,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiConfig {
     companion object {
-        fun getApiService(context: Context): ApiService {
+        suspend fun getApiService(context: Context): ApiService {
             val pref = UserPreference.getInstance(context.dataStore)
-            val token = runBlocking { pref.fetchSession().first().token }
+            val token = pref.fetchSession().first().token
+            Log.d("Token", "Token fetched: $token")
 
             val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
@@ -26,8 +27,8 @@ class ApiConfig {
             }
 
             val client = OkHttpClient.Builder()
-                .addInterceptor(authInterceptor)
                 .addInterceptor(loggingInterceptor)
+                .addInterceptor(authInterceptor)
                 .build()
 
             val retrofit = Retrofit.Builder()
@@ -40,5 +41,3 @@ class ApiConfig {
         }
     }
 }
-
-

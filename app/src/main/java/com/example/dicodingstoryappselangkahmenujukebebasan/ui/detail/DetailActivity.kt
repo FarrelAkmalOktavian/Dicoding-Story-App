@@ -9,13 +9,16 @@ import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.Activity
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainViewModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.ViewModelFactory
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
+import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
     private val mainViewModel: MainViewModel by viewModels {
-        ViewModelFactory.getInstance(this)
+        val viewModelFactory = runBlocking { Injection.provideViewModelFactory(this@DetailActivity) }
+        viewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

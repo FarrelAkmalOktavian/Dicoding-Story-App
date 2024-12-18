@@ -64,4 +64,7 @@ dependencies {
     implementation (libs.glide)
     kapt ("com.github.bumptech.glide:ksp:4.15.1")
 
+    implementation (libs.androidx.camera.lifecycle)
+    implementation (libs.androidx.camera.view)
+    implementation("id.zelory:compressor:3.0.1")
 }
