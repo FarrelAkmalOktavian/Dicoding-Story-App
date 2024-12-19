@@ -24,8 +24,6 @@ class Password @JvmOverloads constructor(
                 }
             }
 
-
-
             override fun afterTextChanged(s: Editable) {
                 // ga ngapa-ngapain
             }

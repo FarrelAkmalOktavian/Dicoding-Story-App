@@ -14,6 +14,20 @@
     <string name="register_desc">Selamat datang di</string>
     <string name="name_text">Nama</string>
     <string name="name_input">masukkan nama</string>
-    <string name="register_desc2">Silahkan isi data kamu yaa...</string>
+    <string name="register_desc2">Silahkan isi data kamu yaa…</string>
     <string name="login_error_message">Mohon masukkan email dan password yang benar</string>
+    <string name="activity_main_error">Halaman error silahkan ulang sesi login anda</string>
+    <string name="logout_text">Logout</string>
+    <string name="add_button">add button</string>
+    <string name="image_desc">image desc</string>
+    <string name="pilih_gambar_text">Pilih Gambar</string>
+    <string name="buka_kamera_text">Buka Kamera</string>
+    <string name="tambahkan_deskripsi_text">Tambahkan Deskripsi</string>
+    <string name="upload_story_text">Upload Story</string>
+    <string name="name_dummy">imam helicopter tempur</string>
+    <string name="description_dummy">ini adalah deskripsi</string>
+    <string name="kembali_text">Kembali</string>
+    <string name="name_tittle">Nama:</string>
+    <string name="description_tittle">Deskripsi:</string>
+    <string name="create_at_tittle">Dibuat pada:</string>
 </resources>

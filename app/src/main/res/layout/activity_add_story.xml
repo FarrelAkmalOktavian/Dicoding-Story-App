@@ -5,47 +5,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@color/white"
     tools:context=".ui.addstory.AddStoryActivity">
 
-    <!-- ImageView for preview -->
     <ImageView
         android:id="@+id/previewImageView"
         android:layout_width="0dp"
         android:layout_height="200dp"
+        android:contentDescription="@string/image_desc"
         android:scaleType="centerCrop"
-        android:background="#E0E0E0"
+        android:background="@drawable/input_border"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Button to select image -->
     <Button
+        style="@style/RoundedButton"
         android:id="@+id/selectImageButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Pilih Gambar"
+        android:text="@string/pilih_gambar_text"
         app:layout_constraintTop_toBottomOf="@id/previewImageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/captureImageButton"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="@color/primary"/>
 
-    <!-- Button to open camera -->
     <Button
+        style="@style/RoundedButton"
         android:id="@+id/captureImageButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Buka Kamera"
+        android:text="@string/buka_kamera_text"
         app:layout_constraintTop_toBottomOf="@id/previewImageView"
         app:layout_constraintStart_toEndOf="@id/selectImageButton"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:backgroundTint="@color/primary"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="10dp"/>
 
-    <!-- EditText for story description -->
     <EditText
         android:id="@+id/storyDescriptionEditText"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:hint="  Tambahkan Deskripsi"
+        android:autofillHints="Ini adalah contoh deskripsi"
+        android:padding="16dp"
+        android:hint="@string/tambahkan_deskripsi_text"
         android:inputType="textMultiLine"
         app:layout_constraintTop_toBottomOf="@id/selectImageButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,15 +59,43 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/input_border"/>
 
-    <!-- Button to upload story -->
     <Button
+        style="@style/RoundedButton"
         android:id="@+id/uploadStoryButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Upload Story"
+        android:text="@string/upload_story_text"
         app:layout_constraintTop_toBottomOf="@id/storyDescriptionEditText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/primary"/>
+
+    <ProgressBar
+        android:layout_marginTop="14dp"
+        android:id="@+id/loadingIndicator"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/primary"
+        android:indeterminateTintMode="src_atop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/uploadStoryButton"
+        android:visibility="gone"/>
+
+    <Button
+        style="@style/RoundedButton"
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/kembali_text"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:backgroundTint="@color/primary"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

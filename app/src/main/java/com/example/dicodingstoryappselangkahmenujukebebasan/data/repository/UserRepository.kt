@@ -4,14 +4,13 @@ import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserPreference
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.AddStoryResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.LoginResponse
-import com.example.dicodingstoryappselangkahmenujukebebasan.data.retrofit.ApiService
-import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.RegisterResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryDetailResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryResponse
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.retrofit.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn

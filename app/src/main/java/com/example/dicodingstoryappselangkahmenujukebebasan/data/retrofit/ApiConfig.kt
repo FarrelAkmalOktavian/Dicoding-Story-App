@@ -15,7 +15,7 @@ class ApiConfig {
         suspend fun getApiService(context: Context): ApiService {
             val pref = UserPreference.getInstance(context.dataStore)
             val token = pref.fetchSession().first().token
-            //Log.d("Token", "Token fetched: $token")
+            Log.d("Token", "Token fetched: $token")
 
             val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
@@ -23,6 +23,8 @@ class ApiConfig {
                 val request = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer $token")
                     .build()
+
+                Log.d("AuthInterceptor", "Request Header: ${request.headers}")
                 chain.proceed(request)
             }
 

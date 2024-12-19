@@ -3,7 +3,10 @@ package com.example.dicodingstoryappselangkahmenujukebebasan.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -43,6 +45,12 @@ class MainActivity : AppCompatActivity() {
         setupAddStory()
         setupLogout()
         observeSession()
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitConfirmationDialog()
+            }
+        })
     }
 
     private fun setupRecyclerView() {
@@ -51,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             adapter = storyAdapter.apply {
                 onItemClick = { storyId ->
                     val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
-                        putExtra("storyId", storyId) // Mengirimkan ID story
+                        putExtra("storyId", storyId)
                     }
                     startActivity(intent)
                 }
@@ -61,7 +69,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupAddStory() {
         binding.addButton.setOnClickListener {
-            //mainViewModel.logout()
             val intent = Intent(this, AddStoryActivity::class.java)
             startActivity(intent)
         }
@@ -92,7 +99,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private suspend fun fetchStories() {
         mainViewModel.getStories(1, 10).observe(this) { result ->
             when (result) {
@@ -105,15 +111,16 @@ class MainActivity : AppCompatActivity() {
                 }
                 is Result.Error -> {
                     println("Error fetching stories")
-                    showLoading(false)
-
+                    showLoading(true)
+                    showErrorMessage()
                 }
                 Result.Loading -> {
                     showLoading(true)
                 }
-
                 else -> {
                     println("Error fetching stories")
+                    showLoading(true)
+                    showErrorMessage()
                 }
             }
         }
@@ -123,11 +130,9 @@ class MainActivity : AppCompatActivity() {
         binding.loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    private fun showErrorMessage(message: String) {
-        binding.errorText.apply {
-            text = message
-            visibility = View.VISIBLE
-        }
+    private fun showErrorMessage() {
+        binding.loadingIndicator.visibility = View.VISIBLE
+        Toast.makeText(this@MainActivity, "Gagal mendapatkan daftar Story", Toast.LENGTH_SHORT).show()
     }
 
     private fun navigateToLogin() {
@@ -137,4 +142,20 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
+    private fun showExitConfirmationDialog() {
+        AlertDialog.Builder(this).apply {
+            setTitle("Konfirmasi Keluar")
+            setMessage("Apakah Anda yakin ingin keluar dari aplikasi?")
+            setPositiveButton("Ya") { _, _ ->
+                finishAffinity()
+            }
+            setNegativeButton("Tidak") { dialog, _ ->
+                dialog.dismiss()
+            }
+            create()
+            show()
+        }
+    }
+
 }

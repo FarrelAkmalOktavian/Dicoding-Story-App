@@ -10,12 +10,11 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainActivity
-import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainViewModel
-import com.example.dicodingstoryappselangkahmenujukebebasan.ViewModelFactory
 import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.ActivityOnboardBinding
 import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.login.LoginActivity
+import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainActivity
+import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainViewModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.register.RegisterActivity
 import kotlinx.coroutines.runBlocking
 

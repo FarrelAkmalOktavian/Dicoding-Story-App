@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -69,6 +70,8 @@ class AddStoryActivity : AppCompatActivity() {
         binding.uploadStoryButton.setOnClickListener {
             uploadStory()
         }
+
+        backButton()
     }
 
     private fun openCamera() {
@@ -136,9 +139,11 @@ class AddStoryActivity : AppCompatActivity() {
                 addStoryViewModel.uploadStory(imagePart, descriptionPart).observe(this@AddStoryActivity) { result ->
                     when (result) {
                         is Result.Loading -> {
+                            binding.loadingIndicator.visibility = View.VISIBLE
                             Toast.makeText(this@AddStoryActivity, "Uploading...", Toast.LENGTH_SHORT).show()
                         }
                         is Result.Success -> {
+                            binding.loadingIndicator.visibility = View.GONE
                             Toast.makeText(this@AddStoryActivity, "Story berhasil diupload!", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this@AddStoryActivity, MainActivity::class.java).apply {
                                 flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -147,6 +152,7 @@ class AddStoryActivity : AppCompatActivity() {
                             finish()
                         }
                         is Result.Error -> {
+                            binding.loadingIndicator.visibility = View.GONE
                             Toast.makeText(this@AddStoryActivity, "Gagal mengupload story", Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -157,6 +163,14 @@ class AddStoryActivity : AppCompatActivity() {
         }
     }
 
+    private fun backButton() {
+        binding.backButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+        }
+    }
 
     companion object {
         private const val REQUEST_CAMERA_PERMISSION = 100

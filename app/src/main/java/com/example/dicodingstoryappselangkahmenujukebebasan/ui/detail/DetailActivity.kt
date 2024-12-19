@@ -1,15 +1,18 @@
 package com.example.dicodingstoryappselangkahmenujukebebasan.ui.detail
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.ActivityDetailBinding
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainViewModel
-import com.example.dicodingstoryappselangkahmenujukebebasan.ViewModelFactory
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
 import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
+import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainActivity
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -29,6 +32,8 @@ class DetailActivity : AppCompatActivity() {
         val storyId = intent.getStringExtra("storyId") ?: return
 
         fetchStoryDetail(storyId)
+
+        backButton()
     }
 
     private fun fetchStoryDetail(storyId: String) {
@@ -36,6 +41,7 @@ class DetailActivity : AppCompatActivity() {
             mainViewModel.getStoryDetail(storyId).observe(this@DetailActivity) { result ->
                 when (result) {
                     is Result.Success -> {
+                        binding.loadingIndicator.visibility = View.GONE
                         val story = result.data.story
                         story?.let {
                             binding.detailName.text = it.name
@@ -48,13 +54,23 @@ class DetailActivity : AppCompatActivity() {
                         }
                     }
                     is Result.Error -> {
-                        // Tangani kesalahan jika diperlukan
+                        binding.loadingIndicator.visibility = View.GONE
+                        Toast.makeText(this@DetailActivity, "Gagal mendapatkan detail", Toast.LENGTH_SHORT).show()
                     }
                     Result.Loading -> {
-                        // Tampilkan indikator loading
+                        binding.loadingIndicator.visibility = View.VISIBLE
                     }
                 }
             }
+        }
+    }
+
+    private fun backButton() {
+        binding.backButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
         }
     }
 
