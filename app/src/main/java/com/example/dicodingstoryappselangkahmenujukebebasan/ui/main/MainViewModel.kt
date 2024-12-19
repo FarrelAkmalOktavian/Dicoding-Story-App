@@ -4,11 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.repository.UserRepository
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.ListStoryItem
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryDetailResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: UserRepository) : ViewModel() {
@@ -22,6 +25,10 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
 
     suspend fun getStoryDetail(storyId: String): LiveData<Result<StoryDetailResponse>> {
         return repository.getStoryDetail(storyId).asLiveData()
+    }
+
+    suspend fun getPagedStories(): Flow<PagingData<ListStoryItem>> {
+        return repository.getPagedStories()
     }
 
     fun logout() {

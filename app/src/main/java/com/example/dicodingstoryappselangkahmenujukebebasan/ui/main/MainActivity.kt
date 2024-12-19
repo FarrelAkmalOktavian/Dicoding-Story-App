@@ -11,13 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingstoryappselangkahmenujukebebasan.StoryAdapter
-import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
 import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.ActivityMainBinding
 import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.addstory.AddStoryActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.detail.DetailActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.login.LoginActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.map.MapsActivity
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         viewModelFactory
     }
     private val storyAdapter: StoryAdapter by lazy {
-        StoryAdapter(emptyList()) { storyId ->
+        StoryAdapter { storyId ->
             val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
                 putExtra("storyId", storyId)
             }
@@ -58,12 +58,14 @@ class MainActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         binding.recyclerViewStories.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = storyAdapter.apply {
-                onItemClick = { storyId ->
-                    val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
-                        putExtra("storyId", storyId)
-                    }
-                    startActivity(intent)
+            adapter = storyAdapter
+        }
+
+        lifecycleScope.launch {
+            storyAdapter.loadStateFlow.collect { loadState ->
+                binding.loadingIndicator.visibility = if (loadState.refresh is androidx.paging.LoadState.Loading) View.VISIBLE else View.GONE
+                if (loadState.refresh is androidx.paging.LoadState.Error) {
+                    Toast.makeText(this@MainActivity, "Gagal memuat cerita", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -97,39 +99,17 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.getSession().observe(this) { session ->
             val token = session.token
             if (token.isNotEmpty()) {
-                lifecycleScope.launch {
-                    fetchStories()
-                }
+                observeStories()
             } else {
-                println("Token is null or empty, cannot fetch stories")
                 navigateToLogin()
             }
         }
     }
 
-    private suspend fun fetchStories() {
-        mainViewModel.getStories(1, 10).observe(this) { result ->
-            when (result) {
-                is Result.Success -> {
-                    val filteredStories = result.data.listStory.filter {
-                        it.name != null && it.photoUrl != null
-                    }
-                    storyAdapter.updateData(filteredStories)
-                    showLoading(false)
-                }
-                is Result.Error -> {
-                    println("Error fetching stories")
-                    showLoading(true)
-                    showErrorMessage()
-                }
-                Result.Loading -> {
-                    showLoading(true)
-                }
-                else -> {
-                    println("Error fetching stories")
-                    showLoading(true)
-                    showErrorMessage()
-                }
+    private fun observeStories() {
+        lifecycleScope.launch {
+            mainViewModel.getPagedStories().collectLatest { pagingData ->
+                storyAdapter.submitData(pagingData)
             }
         }
     }

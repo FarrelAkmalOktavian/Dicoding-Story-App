@@ -3,13 +3,15 @@ package com.example.dicodingstoryappselangkahmenujukebebasan
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.ListStoryItem
 import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.ItemListBinding
 
-class StoryAdapter(private var listStory: List<ListStoryItem>, var onItemClick: (String) -> Unit) :
-    RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
+class StoryAdapter(private val onItemClick: (String) -> Unit) :
+    PagingDataAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
 
     inner class StoryViewHolder(private val binding: ItemListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem) {
@@ -33,14 +35,21 @@ class StoryAdapter(private var listStory: List<ListStoryItem>, var onItemClick: 
     }
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
-        holder.bind(listStory[position])
+        val story = getItem(position)
+        if (story != null) {
+            holder.bind(story)
+        }
     }
 
-    override fun getItemCount(): Int = listStory.size
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
+            override fun areItemsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateData(newListStory: List<ListStoryItem>) {
-        listStory = newListStory
-        notifyDataSetChanged()
+            override fun areContentsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }

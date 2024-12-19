@@ -1,10 +1,16 @@
 package com.example.dicodingstoryappselangkahmenujukebebasan.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.paging.StoryPagingSource
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserPreference
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.AddStoryResponse
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.ListStoryItem
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.LoginResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.RegisterResponse
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.Story
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryDetailResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
@@ -13,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -134,6 +141,21 @@ class UserRepository private constructor(
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun getPagedStories(): Flow<PagingData<ListStoryItem>> {
+        val user = userPreference.fetchSession().firstOrNull()
+        val token = user?.token.orEmpty()
+
+        return if (token.isNotEmpty()) {
+            Pager(
+                config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+                pagingSourceFactory = {
+                    StoryPagingSource(apiService, token)
+                }
+            ).flow
+        } else {
+            flowOf(PagingData.empty()) // Return an empty PagingData if no token is found
+        }
+    }
 
     suspend fun storeSession(user: UserModel) {
         userPreference.storeSession(user)
