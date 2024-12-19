@@ -109,6 +109,31 @@ class UserRepository private constructor(
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun getStoriesWithLocation(): Flow<Result<StoryResponse>> {
+        return flow {
+            try {
+                val user = userPreference.fetchSession().firstOrNull()
+                val token = user?.token.orEmpty()
+
+                if (token.isEmpty()) {
+                    emit(Result.Error("Token tidak ditemukan, silakan login kembali"))
+                    return@flow
+                }
+
+                //val bearerToken = "Bearer $token"
+                val response = apiService.getStoriesWithLocation(location = 1)
+
+                if (response.error == true) {
+                    emit(Result.Error("Gagal mengambil cerita: ${response.message}"))
+                } else {
+                    emit(Result.Success(response))
+                }
+            } catch (e: Exception) {
+                emit(Result.Error("Gagal mengambil cerita: ${e.message}"))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
 
     suspend fun storeSession(user: UserModel) {
         userPreference.storeSession(user)

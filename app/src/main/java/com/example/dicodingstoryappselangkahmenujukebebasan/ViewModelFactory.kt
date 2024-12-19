@@ -8,6 +8,7 @@ import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.addstory.AddStoryViewModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.login.LoginViewModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainViewModel
+import com.example.dicodingstoryappselangkahmenujukebebasan.ui.map.MapsViewModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.register.RegisterViewModel
 
 class ViewModelFactory(private val repository: UserRepository) : ViewModelProvider.NewInstanceFactory() {
@@ -26,6 +27,9 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
             }
             modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
                 AddStoryViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
