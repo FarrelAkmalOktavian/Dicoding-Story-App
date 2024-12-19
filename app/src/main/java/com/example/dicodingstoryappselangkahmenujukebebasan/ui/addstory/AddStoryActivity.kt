@@ -1,12 +1,17 @@
 package com.example.dicodingstoryappselangkahmenujukebebasan.ui.addstory
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
@@ -20,12 +25,25 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 class AddStoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddStoryBinding
     private var selectedImageUri: Uri? = null
+    private var capturedImageFile: File? = null
     private lateinit var addStoryViewModel: AddStoryViewModel
+
+    private val launcherCamera = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            capturedImageFile?.let { file ->
+                selectedImageUri = Uri.fromFile(file)
+                binding.previewImageView.setImageURI(selectedImageUri)
+            }
+        } else {
+            Toast.makeText(this, "Failed to capture image", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,9 +62,30 @@ class AddStoryActivity : AppCompatActivity() {
             selectImage()
         }
 
+        binding.captureImageButton.setOnClickListener {
+            openCamera()
+        }
+
         binding.uploadStoryButton.setOnClickListener {
             uploadStory()
         }
+    }
+
+    private fun openCamera() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                REQUEST_CAMERA_PERMISSION
+            )
+            return
+        }
+
+        val tempFile = File.createTempFile("temp_image", ".jpg", cacheDir).apply {
+            capturedImageFile = this
+        }
+        val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", tempFile)
+        launcherCamera.launch(uri)
     }
 
     private val launcherGallery = registerForActivityResult(
@@ -72,36 +111,28 @@ class AddStoryActivity : AppCompatActivity() {
         }
 
         selectedImageUri?.let { uri ->
-            // Panggil observeViewModel() hanya setelah imageUri dan description terisi
             observeViewModel(uri, description)
         }
     }
 
     private fun observeViewModel(uri: Uri, description: String) {
-        // Observasi hasil upload story hanya setelah gambar dipilih dan deskripsi valid
         lifecycleScope.launch {
             try {
                 val file = FileUtils.getFileFromUri(this@AddStoryActivity, uri)
                 val compressedFile = reduceFileImage(file, this@AddStoryActivity)
 
-                // Validasi ukuran file
                 if (compressedFile.length() > 1 * 1024 * 1024) {
                     Toast.makeText(this@AddStoryActivity, "Ukuran gambar melebihi 1MB", Toast.LENGTH_SHORT).show()
                     return@launch
                 }
 
-                val mimeType = contentResolver.getType(uri)?.takeIf { it in listOf("image/jpeg", "image/png") }
-                    ?: run {
-                        Toast.makeText(this@AddStoryActivity, "Format gambar tidak didukung", Toast.LENGTH_SHORT).show()
-                        return@launch
-                    }
+                val mimeType = contentResolver.getType(uri) ?: "image/*"
 
                 val imagePart = MultipartBody.Part.createFormData(
                     "photo", compressedFile.name, compressedFile.asRequestBody(mimeType.toMediaType())
                 )
                 val descriptionPart = description.toRequestBody("text/plain".toMediaType())
 
-                // Kirim ke repository
                 addStoryViewModel.uploadStory(imagePart, descriptionPart).observe(this@AddStoryActivity) { result ->
                     when (result) {
                         is Result.Loading -> {
@@ -124,5 +155,10 @@ class AddStoryActivity : AppCompatActivity() {
                 Toast.makeText(this@AddStoryActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+
+    companion object {
+        private const val REQUEST_CAMERA_PERMISSION = 100
     }
 }

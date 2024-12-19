@@ -1,4 +1,3 @@
-<!-- res/layout/activity_add_story.xml -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,11 +21,22 @@
     <!-- Button to select image -->
     <Button
         android:id="@+id/selectImageButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Pilih Gambar"
         app:layout_constraintTop_toBottomOf="@id/previewImageView"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/captureImageButton"
+        android:layout_marginTop="16dp" />
+
+    <!-- Button to open camera -->
+    <Button
+        android:id="@+id/captureImageButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Buka Kamera"
+        app:layout_constraintTop_toBottomOf="@id/previewImageView"
+        app:layout_constraintStart_toEndOf="@id/selectImageButton"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
@@ -35,12 +45,13 @@
         android:id="@+id/storyDescriptionEditText"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:hint="Tambahkan Deskripsi"
+        android:hint="  Tambahkan Deskripsi"
         android:inputType="textMultiLine"
         app:layout_constraintTop_toBottomOf="@id/selectImageButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:background="@drawable/input_border"/>
 
     <!-- Button to upload story -->
     <Button
