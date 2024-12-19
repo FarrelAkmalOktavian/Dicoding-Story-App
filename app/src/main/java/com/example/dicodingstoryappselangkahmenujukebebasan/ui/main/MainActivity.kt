@@ -17,6 +17,7 @@ import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.addstory.AddStoryActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.detail.DetailActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.login.LoginActivity
+import com.example.dicodingstoryappselangkahmenujukebebasan.ui.map.MapsActivity
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         setupRecyclerView()
         setupAddStory()
+        setupMap()
         setupLogout()
         observeSession()
 
@@ -70,6 +72,12 @@ class MainActivity : AppCompatActivity() {
     private fun setupAddStory() {
         binding.addButton.setOnClickListener {
             val intent = Intent(this, AddStoryActivity::class.java)
+            startActivity(intent)
+        }
+    }
+    private fun setupMap() {
+        binding.mapButton.setOnClickListener {
+            val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
         }
     }

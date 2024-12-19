@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserPreference
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.dataStore
 import kotlinx.coroutines.flow.first
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -19,13 +20,24 @@ class ApiConfig {
 
             val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
-            val authInterceptor = okhttp3.Interceptor { chain ->
-                val request = chain.request().newBuilder()
+            val authInterceptor = Interceptor { chain ->
+                val request = chain.request()
+
+                val excludedEndpoints = listOf("/login", "/register")
+                if (excludedEndpoints.any { request.url.encodedPath.contains(it) }) {
+                    return@Interceptor chain.proceed(request)
+                }
+
+                if (token.isEmpty()) {
+                    Log.e("Interceptor", "Token tidak ditemukan. Silakan login ulang.")
+                    throw IllegalStateException("Token tidak ditemukan. Silakan login ulang.")
+                }
+
+                val authenticatedRequest = request.newBuilder()
                     .addHeader("Authorization", "Bearer $token")
                     .build()
 
-                Log.d("AuthInterceptor", "Request Header: ${request.headers}")
-                chain.proceed(request)
+                chain.proceed(authenticatedRequest)
             }
 
             val client = OkHttpClient.Builder()

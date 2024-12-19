@@ -51,6 +51,11 @@ class AddStoryActivity : AppCompatActivity() {
         binding = ActivityAddStoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        savedInstanceState?.getString("selected_image_uri")?.let { uriString ->
+            selectedImageUri = Uri.parse(uriString)
+            binding.previewImageView.setImageURI(selectedImageUri)
+        }
+
         lifecycleScope.launch {
             val viewModelFactory = Injection.provideViewModelFactory(applicationContext)
             addStoryViewModel = ViewModelProvider(
@@ -169,6 +174,13 @@ class AddStoryActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
             finish()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        selectedImageUri?.let {
+            outState.putString("selected_image_uri", it.toString())
         }
     }
 

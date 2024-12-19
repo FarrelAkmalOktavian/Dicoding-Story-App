@@ -30,4 +30,9 @@
     <string name="name_tittle">Nama:</string>
     <string name="description_tittle">Deskripsi:</string>
     <string name="create_at_tittle">Dibuat pada:</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satellite</string>
+    <string name="terrain_type">Terrain</string>
+    <string name="hybrid_type">Hybrid</string>
 </resources>

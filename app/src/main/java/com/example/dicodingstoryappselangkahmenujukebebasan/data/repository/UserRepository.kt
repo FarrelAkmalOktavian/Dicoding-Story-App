@@ -26,7 +26,7 @@ class UserRepository private constructor(
             emit(Result.Loading)
             try {
                 val response = apiService.postLogin(email, password)
-                if (response.error == false && response.loginResult != null) {
+                if (!response.error!! && response.loginResult != null) {
                     val loginResult = response.loginResult
                     val user = UserModel(
                         email = email,
@@ -43,7 +43,6 @@ class UserRepository private constructor(
             }
         }
     }
-
 
     suspend fun register(name: String, email: String, password: String): Flow<Result<RegisterResponse>> {
         return flow {

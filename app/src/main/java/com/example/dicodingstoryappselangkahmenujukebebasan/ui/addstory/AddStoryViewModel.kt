@@ -1,5 +1,6 @@
 package com.example.dicodingstoryappselangkahmenujukebebasan.ui.addstory
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -10,6 +11,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 class AddStoryViewModel(private val repository: UserRepository) : ViewModel() {
+
     fun uploadStory(file: MultipartBody.Part, description: RequestBody): LiveData<Result<AddStoryResponse>> = liveData {
         emit(Result.Loading)
         try {
