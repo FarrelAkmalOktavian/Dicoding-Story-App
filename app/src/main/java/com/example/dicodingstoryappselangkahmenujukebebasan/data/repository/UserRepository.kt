@@ -66,27 +66,6 @@
             }
         }
 
-        suspend fun getStories(page: Int, size: Int): Flow<Result<StoryResponse>> {
-            return flow {
-                try {
-                    val user = userPreference.fetchSession().firstOrNull()
-                    val token = user?.token.orEmpty()
-
-                    if (token.isEmpty()) {
-                        emit(Result.Error("Token tidak ditemukan, silakan login kembali"))
-                        return@flow
-                    }
-
-                    val authorization = "Bearer $token"
-                    val response = apiService.getStories(authorization, page, size)
-                    emit(Result.Success(response))
-                } catch (e: Exception) {
-                    emit(Result.Error("Gagal mengambil cerita: ${e.message}"))
-                }
-            }.flowOn(Dispatchers.IO)
-        }
-
-
         suspend fun getStoryDetail(storyId: String): Flow<Result<StoryDetailResponse>> {
             return flow {
                 try {

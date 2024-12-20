@@ -15,7 +15,6 @@ class StoryPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ListStoryItem> {
         val page = params.key ?: 1
         return try {
-            // Tambahkan header Authorization dengan format "Bearer token"
             val authorization = "Bearer $token"
             val response = apiService.getStories(authorization, page, params.loadSize)
             val stories = response.listStory

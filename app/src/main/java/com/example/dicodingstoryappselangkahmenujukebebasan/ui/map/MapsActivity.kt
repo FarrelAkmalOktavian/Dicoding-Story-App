@@ -31,7 +31,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Menggunakan Coroutine untuk memanggil suspend function
         CoroutineScope(Dispatchers.Main).launch {
             val factory = Injection.provideViewModelFactory(applicationContext)
             mapsViewModel = ViewModelProvider(this@MapsActivity, factory)[MapsViewModel::class.java]

@@ -23,7 +23,6 @@ import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.utils.FileUtils
 import com.example.dicodingstoryappselangkahmenujukebebasan.utils.reduceFileImage
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody

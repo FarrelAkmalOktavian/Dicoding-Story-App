@@ -9,7 +9,6 @@ import com.example.dicodingstoryappselangkahmenujukebebasan.data.pref.UserModel
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.repository.UserRepository
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.ListStoryItem
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryDetailResponse
-import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.StoryResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -19,16 +18,12 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
         return repository.fetchSession().asLiveData()
     }
 
-    suspend fun getStories(page: Int, size: Int): LiveData<Result<StoryResponse>> {
-        return repository.getStories(page, size).asLiveData()
-    }
-
     suspend fun getStoryDetail(storyId: String): LiveData<Result<StoryDetailResponse>> {
         return repository.getStoryDetail(storyId).asLiveData()
     }
 
-    suspend fun getPagedStories(): Flow<PagingData<ListStoryItem>> {
-        return repository.getPagedStories()
+    suspend fun getPagedStories(): LiveData<PagingData<ListStoryItem>> {
+        return repository.getPagedStories().asLiveData()
     }
 
     fun logout() {

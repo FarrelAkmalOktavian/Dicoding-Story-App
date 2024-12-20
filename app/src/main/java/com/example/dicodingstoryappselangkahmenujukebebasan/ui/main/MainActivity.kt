@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingstoryappselangkahmenujukebebasan.StoryAdapter
@@ -109,11 +110,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeStories() {
         lifecycleScope.launch {
-            mainViewModel.getPagedStories().collectLatest { pagingData ->
+            mainViewModel.getPagedStories().asFlow().collectLatest { pagingData ->
                 storyAdapter.submitData(pagingData)
             }
         }
     }
+
 
     private fun showErrorMessage() {
         binding.loadingIndicator.visibility = View.VISIBLE

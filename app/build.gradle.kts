@@ -71,5 +71,14 @@ dependencies {
 
     implementation (libs.androidx.camera.lifecycle)
     implementation (libs.androidx.camera.view)
-    implementation("id.zelory:compressor:3.0.1")
+    implementation(libs.zelory.compressor)
+
+    androidTestImplementation (libs.androidx.core.testing)
+    androidTestImplementation (libs.kotlinx.coroutines.test)
+
+    testImplementation (libs.androidx.core.testing.v210)
+    testImplementation (libs.kotlinx.coroutines.test)
+    testImplementation (libs.mockito.core)
+    testImplementation (libs.mockito.inline)
+    testImplementation (libs.mockito.kotlin)
 }
