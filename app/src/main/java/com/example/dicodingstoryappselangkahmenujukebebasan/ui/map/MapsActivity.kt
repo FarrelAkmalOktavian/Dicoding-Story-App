@@ -1,9 +1,11 @@
 package com.example.dicodingstoryappselangkahmenujukebebasan.ui.map
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.dicodingstoryappselangkahmenujukebebasan.R
@@ -15,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.ActivityMapsBinding
 import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
+import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,6 +42,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .findFragmentById(R.id.map) as SupportMapFragment
             mapFragment.getMapAsync(this@MapsActivity)
         }
+
+        backButton()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -60,6 +65,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapsViewModel.getStoriesWithLocation().observe(this) { result ->
             when (result) {
                 is Result.Success -> {
+                    binding.loadingIndicator.visibility = View.GONE
                     result.data.listStory.forEach { story ->
                         val latLng = LatLng(story.lat ?: 0.0, story.lon ?: 0.0)
                         mMap.addMarker(
@@ -71,12 +77,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
                 is Result.Error -> {
+                    binding.loadingIndicator.visibility = View.GONE
                     Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
                 }
                 is Result.Loading -> {
-                    // Show loading indicator if necessary
+                    binding.loadingIndicator.visibility = View.VISIBLE
                 }
             }
+        }
+    }
+
+    private fun backButton() {
+        binding.backButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
         }
     }
 
