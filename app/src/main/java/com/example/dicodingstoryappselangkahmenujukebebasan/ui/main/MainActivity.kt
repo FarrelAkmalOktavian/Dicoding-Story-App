@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
                 binding.loadingIndicator.visibility = if (loadState.refresh is androidx.paging.LoadState.Loading) View.VISIBLE else View.GONE
                 if (loadState.refresh is androidx.paging.LoadState.Error) {
                     Toast.makeText(this@MainActivity, "Gagal memuat cerita", Toast.LENGTH_SHORT).show()
+                    showErrorMessage()
                 }
             }
         }
@@ -112,10 +113,6 @@ class MainActivity : AppCompatActivity() {
                 storyAdapter.submitData(pagingData)
             }
         }
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        binding.loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     private fun showErrorMessage() {

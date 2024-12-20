@@ -12,10 +12,11 @@ import okhttp3.RequestBody
 
 class AddStoryViewModel(private val repository: UserRepository) : ViewModel() {
 
-    fun uploadStory(file: MultipartBody.Part, description: RequestBody): LiveData<Result<AddStoryResponse>> = liveData {
+    fun uploadStory(file: MultipartBody.Part, description: RequestBody, lat: RequestBody? = null,
+                    lon: RequestBody? = null): LiveData<Result<AddStoryResponse>> = liveData {
         emit(Result.Loading)
         try {
-            val result = repository.uploadStory(file, description)
+            val result = repository.uploadStory(file, description, lat, lon)
 
             result.collect { response ->
                 emit(response)

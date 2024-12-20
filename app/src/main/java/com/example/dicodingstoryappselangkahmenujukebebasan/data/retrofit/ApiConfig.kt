@@ -20,29 +20,8 @@ class ApiConfig {
 
             val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
-            val authInterceptor = Interceptor { chain ->
-                val request = chain.request()
-
-                val excludedEndpoints = listOf("/login", "/register")
-                if (excludedEndpoints.any { request.url.encodedPath.contains(it) }) {
-                    return@Interceptor chain.proceed(request)
-                }
-
-                if (token.isEmpty()) {
-                    Log.e("Interceptor", "Token tidak ditemukan. Silakan login ulang.")
-                    throw IllegalStateException("Token tidak ditemukan. Silakan login ulang.")
-                }
-
-                val authenticatedRequest = request.newBuilder()
-                    .addHeader("Authorization", "Bearer $token")
-                    .build()
-
-                chain.proceed(authenticatedRequest)
-            }
-
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
-                .addInterceptor(authInterceptor)
                 .build()
 
             val retrofit = Retrofit.Builder()

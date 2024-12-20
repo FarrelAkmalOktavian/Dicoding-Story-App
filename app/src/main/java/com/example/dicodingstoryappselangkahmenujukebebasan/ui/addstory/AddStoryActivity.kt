@@ -15,15 +15,19 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.dicodingstoryappselangkahmenujukebebasan.data.response.AddStoryResponse
 import com.example.dicodingstoryappselangkahmenujukebebasan.data.result.Result
 import com.example.dicodingstoryappselangkahmenujukebebasan.databinding.ActivityAddStoryBinding
 import com.example.dicodingstoryappselangkahmenujukebebasan.di.Injection
 import com.example.dicodingstoryappselangkahmenujukebebasan.ui.main.MainActivity
 import com.example.dicodingstoryappselangkahmenujukebebasan.utils.FileUtils
 import com.example.dicodingstoryappselangkahmenujukebebasan.utils.reduceFileImage
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -113,17 +117,20 @@ class AddStoryActivity : AppCompatActivity() {
 
     private fun uploadStory() {
         val description = binding.storyDescriptionEditText.text.toString()
+        val isLocationEnabled = binding.addLocationSwitch.isChecked  // Ambil status SwitchCompat
+
         if (selectedImageUri == null || description.isEmpty()) {
             Toast.makeText(this, "Lengkapi data sebelum mengirim!", Toast.LENGTH_SHORT).show()
             return
         }
 
         selectedImageUri?.let { uri ->
-            observeViewModel(uri, description)
+            observeViewModel(uri, description, isLocationEnabled)
         }
     }
 
-    private fun observeViewModel(uri: Uri, description: String) {
+
+    private fun observeViewModel(uri: Uri, description: String, isLocationEnabled: Boolean) {
         lifecycleScope.launch {
             try {
                 val file = FileUtils.getFileFromUri(this@AddStoryActivity, uri)
@@ -135,35 +142,43 @@ class AddStoryActivity : AppCompatActivity() {
                 }
 
                 val mimeType = contentResolver.getType(uri) ?: "image/*"
-
                 val imagePart = MultipartBody.Part.createFormData(
                     "photo", compressedFile.name, compressedFile.asRequestBody(mimeType.toMediaType())
                 )
                 val descriptionPart = description.toRequestBody("text/plain".toMediaType())
 
-                addStoryViewModel.uploadStory(imagePart, descriptionPart).observe(this@AddStoryActivity) { result ->
-                    when (result) {
-                        is Result.Loading -> {
-                            binding.loadingIndicator.visibility = View.VISIBLE
-                            Toast.makeText(this@AddStoryActivity, "Uploading...", Toast.LENGTH_SHORT).show()
-                        }
-                        is Result.Success -> {
-                            binding.loadingIndicator.visibility = View.GONE
-                            Toast.makeText(this@AddStoryActivity, "Story berhasil diupload!", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this@AddStoryActivity, MainActivity::class.java).apply {
-                                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                            }
-                            startActivity(intent)
-                            finish()
-                        }
-                        is Result.Error -> {
-                            binding.loadingIndicator.visibility = View.GONE
-                            Toast.makeText(this@AddStoryActivity, "Gagal mengupload story", Toast.LENGTH_SHORT).show()
-                        }
+                if (isLocationEnabled) {
+                    checkLocationPermission()
+                } else {
+                    addStoryViewModel.uploadStory(imagePart, descriptionPart, null, null).observe(this@AddStoryActivity) { result ->
+                        handleUploadResult(result)
                     }
                 }
+
             } catch (e: Exception) {
                 Toast.makeText(this@AddStoryActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun handleUploadResult(result: Result<AddStoryResponse>) {
+        when (result) {
+            is Result.Loading -> {
+                binding.loadingIndicator.visibility = View.VISIBLE
+                Toast.makeText(this@AddStoryActivity, "Uploading...", Toast.LENGTH_SHORT).show()
+            }
+            is Result.Success -> {
+                binding.loadingIndicator.visibility = View.GONE
+                Toast.makeText(this@AddStoryActivity, "Story berhasil diupload!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@AddStoryActivity, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                startActivity(intent)
+                finish()
+            }
+            is Result.Error -> {
+                binding.loadingIndicator.visibility = View.GONE
+                Toast.makeText(this@AddStoryActivity, "Gagal mengupload story", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -184,7 +199,78 @@ class AddStoryActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                REQUEST_LOCATION_PERMISSION
+            )
+        } else {
+            getLocation()
+        }
+    }
+
+    private fun getLocation() {
+        // Memeriksa izin lokasi
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            fusedLocationClient.lastLocation.addOnCompleteListener { task ->
+                if (task.isSuccessful && task.result != null) {
+                    val location = task.result
+                    val latPart = location?.latitude?.toString()?.toRequestBody("text/plain".toMediaType())
+                    val lonPart = location?.longitude?.toString()?.toRequestBody("text/plain".toMediaType())
+                    observeViewModelWithLocation(latPart, lonPart)
+                } else {
+                    Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                REQUEST_LOCATION_PERMISSION
+            )
+        }
+    }
+
+    private fun observeViewModelWithLocation(latPart: RequestBody?, lonPart: RequestBody?) {
+        val description = binding.storyDescriptionEditText.text.toString()
+        selectedImageUri?.let { uri ->
+            lifecycleScope.launch {
+                val file = FileUtils.getFileFromUri(this@AddStoryActivity, uri)
+                val compressedFile = reduceFileImage(file, this@AddStoryActivity)
+
+                val mimeType = contentResolver.getType(uri) ?: "image/*"
+                val imagePart = MultipartBody.Part.createFormData(
+                    "photo", compressedFile.name, compressedFile.asRequestBody(mimeType.toMediaType())
+                )
+                val descriptionPart = description.toRequestBody("text/plain".toMediaType())
+
+                addStoryViewModel.uploadStory(imagePart, descriptionPart, latPart, lonPart).observe(this@AddStoryActivity) { result ->
+                    handleUploadResult(result)
+                }
+            }
+        }
+    }
+
     companion object {
         private const val REQUEST_CAMERA_PERMISSION = 100
+        private const val REQUEST_LOCATION_PERMISSION = 101
     }
 }
