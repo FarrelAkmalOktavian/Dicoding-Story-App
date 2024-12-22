@@ -101,16 +101,16 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.getSession().observe(this) { session ->
             val token = session.token
             if (token.isNotEmpty()) {
-                observeStories()
+                observeStories(token)
             } else {
                 navigateToLogin()
             }
         }
     }
 
-    private fun observeStories() {
+    private fun observeStories(token: String) {
         lifecycleScope.launch {
-            mainViewModel.getPagedStories().asFlow().collectLatest { pagingData ->
+            mainViewModel.getPagedStories(token).asFlow().collectLatest { pagingData ->
                 storyAdapter.submitData(pagingData)
             }
         }

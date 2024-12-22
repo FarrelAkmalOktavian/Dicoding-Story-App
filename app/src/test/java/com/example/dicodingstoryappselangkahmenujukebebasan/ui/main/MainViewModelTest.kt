@@ -38,6 +38,7 @@ class MainViewModelTest {
     private lateinit var repository: UserRepository
 
     private val dummyStories = DataDummy.generateDummyStoryResponse().listStory
+    private val dummyToken = "dummy_token"
 
     @Test
     fun `when getPagedStories Should Not Null and Return Data`() = runTest {
@@ -45,7 +46,7 @@ class MainViewModelTest {
         Mockito.`when`(repository.getPagedStories()).thenReturn(flowOf(fakePagingData))
 
         val mainViewModel = MainViewModel(repository)
-        val actualStories: PagingData<ListStoryItem> = mainViewModel.getPagedStories().getOrAwaitValue()
+        val actualStories: PagingData<ListStoryItem> = mainViewModel.getPagedStories(dummyToken).getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = object : DiffUtil.ItemCallback<ListStoryItem>() {
@@ -73,7 +74,7 @@ class MainViewModelTest {
         Mockito.`when`(repository.getPagedStories()).thenReturn(flowOf(fakePagingData))
 
         val mainViewModel = MainViewModel(repository)
-        val actualStories: PagingData<ListStoryItem> = mainViewModel.getPagedStories().getOrAwaitValue()
+        val actualStories: PagingData<ListStoryItem> = mainViewModel.getPagedStories(dummyToken).getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = object : DiffUtil.ItemCallback<ListStoryItem>() {
@@ -91,6 +92,15 @@ class MainViewModelTest {
         differ.submitData(actualStories)
 
         assertEquals(0, differ.snapshot().size)
+    }
+
+    @Test
+    fun `when logout should call repository logout`() = runTest {
+        val mainViewModel = MainViewModel(repository)
+
+        mainViewModel.logout()
+
+        Mockito.verify(repository).logout()
     }
 }
 

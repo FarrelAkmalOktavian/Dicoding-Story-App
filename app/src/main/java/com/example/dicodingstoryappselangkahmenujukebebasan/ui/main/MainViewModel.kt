@@ -22,7 +22,7 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
         return repository.getStoryDetail(storyId).asLiveData()
     }
 
-    suspend fun getPagedStories(): LiveData<PagingData<ListStoryItem>> {
+    suspend fun getPagedStories(userToken: String): LiveData<PagingData<ListStoryItem>> {
         return repository.getPagedStories().asLiveData()
     }
 
