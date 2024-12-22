@@ -134,8 +134,8 @@ class LoginActivity : AppCompatActivity() {
         val messageAlpha = ObjectAnimator.ofFloat(binding.loginText1, View.ALPHA, 0f, 1f).setDuration(500)
 
         val message2 =
-            ObjectAnimator.ofFloat(binding.loginText2, View.TRANSLATION_X, -1000f, 0f).setDuration(250)
-        val message2Alpha = ObjectAnimator.ofFloat(binding.loginText2, View.ALPHA, 0f, 1f).setDuration(250)
+            ObjectAnimator.ofFloat(binding.loginText2, View.TRANSLATION_X, -1000f, 0f).setDuration(500)
+        val message2Alpha = ObjectAnimator.ofFloat(binding.loginText2, View.ALPHA, 0f, 1f).setDuration(500)
 
         val emailTextView =
             ObjectAnimator.ofFloat(binding.emailLabel, View.TRANSLATION_X, -1000f, 0f).setDuration(250)

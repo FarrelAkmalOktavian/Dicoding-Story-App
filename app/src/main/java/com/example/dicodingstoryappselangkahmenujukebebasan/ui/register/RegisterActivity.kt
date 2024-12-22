@@ -141,12 +141,12 @@ class RegisterActivity : AppCompatActivity() {
         val messageAlpha = ObjectAnimator.ofFloat(binding.signupText1, View.ALPHA, 0f, 1f).setDuration(500)
 
         val message2 =
-            ObjectAnimator.ofFloat(binding.signupText2, View.TRANSLATION_X, -1000f, 0f).setDuration(250)
-        val message2Alpha = ObjectAnimator.ofFloat(binding.signupText2, View.ALPHA, 0f, 1f).setDuration(250)
+            ObjectAnimator.ofFloat(binding.signupText2, View.TRANSLATION_X, -1000f, 0f).setDuration(500)
+        val message2Alpha = ObjectAnimator.ofFloat(binding.signupText2, View.ALPHA, 0f, 1f).setDuration(500)
 
         val message3 =
-            ObjectAnimator.ofFloat(binding.signupText3, View.TRANSLATION_X, -1000f, 0f).setDuration(250)
-        val message3Alpha = ObjectAnimator.ofFloat(binding.signupText3, View.ALPHA, 0f, 1f).setDuration(250)
+            ObjectAnimator.ofFloat(binding.signupText3, View.TRANSLATION_X, -1000f, 0f).setDuration(500)
+        val message3Alpha = ObjectAnimator.ofFloat(binding.signupText3, View.ALPHA, 0f, 1f).setDuration(500)
 
         val emailTextView =
             ObjectAnimator.ofFloat(binding.emailLabel, View.TRANSLATION_X, -1000f, 0f).setDuration(250)
